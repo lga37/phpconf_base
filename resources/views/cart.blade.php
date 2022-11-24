@@ -2,33 +2,43 @@
 
 
 @section('content')
-    <h1>Cartttttttttttt</h1>    
+    <h1>Cart</h1>    
 
-
-    @if(session()->has('cart'))
-    <a href="{{ route('cart.clear') }}">clear</a><br><br>
-    <a href="{{ route('checkout') }}">checkout</a><br><br>
-
+    <table class="table table-striped table-hover">
         @foreach (session()->get('cart') as $product)
+            <tr>
+                <td><img src="{{ $product->img }}" width="60" class="img-carrinho rounded-circle" alt="$nome"></td>
+                <td>{{ $product->name }}</td>
+                <td>{{ $product->price }}</td>
+                <td>
+                    <div class="btn-group me-2">
+                        <a href="#" class="btn btn-outline-secondary">-</a>
+                        <a href='#' class="btn disabled">{{ $product->qty }}</a>
+                        <a href="{{ route('cart.incr',$product)}}" class="btn btn-outline-secondary">+</a>
+                    </div>
+                </td>
+                <td>tot item</td>
+                <td><a href="{{ route('cart.del',$product)}}" class="btn btn-sm btn-outline-danger">del</a></td>
+            </tr>
             
-            {{ $product->name }}  R${{ $product->price }} x {{ $product->qty }}  
-
-            <a href="{{ route('cart.incr',$product)}}">+</a>
-
-            <a href="{{ route('cart.del',$product)}}">del</a><br>
         @endforeach
+        
+            <tr><td colspan=4></td><td><h2>R$ 
+            @php 
+            echo collect(session()->get('cart'))
+                ->reduce(function($carry, $product){
+                    return $carry + ($product['qty']*$product['price']);
+                });
 
-    @else 
-        vaziooooooo
-    @endif
+            @endphp
+            </h2></td><td></td>
+            </tr>
+        </table>
     
-    <hr>
-    @php 
-    echo collect(session()->get('cart'))
-        ->reduce(function($carry, $product){
-            return $carry + ($product['qty']*$product['price']);
-        });
+        <a href="{{ route('cart.clear') }}" class="btn btn-lg btn-outline-danger">Cancelar</a>
+        <a href="{{ route('checkout') }}" class="ms-4 btn btn-lg btn-outline-success">Checkout</a>
+    
+        
 
-    @endphp
 
 @endsection

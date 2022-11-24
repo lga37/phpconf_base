@@ -65,7 +65,7 @@ class CartController extends Controller
 
         session()->forget('cart');
         session()->flash('success', "pedido $checkout->id ok");
-        return redirect()->route('dashb');        
+        return redirect()->route('dashboard');        
     }
 
 }
